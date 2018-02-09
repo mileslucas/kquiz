@@ -7,8 +7,7 @@ from django.utils.decorators import method_decorator
 # Create your views here.
 class IndexView(TemplateView):
     template_name = 'index.html'
-    def get(self, request, **kwargs):
-        return HttpResponse('result')
+
 
 
 @method_decorator(login_required, name='dispatch')

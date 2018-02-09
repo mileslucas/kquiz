@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    command: python3 manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    links:
+      - selenium
+    env_file:
+      - .env
+    environment:
+      - SELENIUM_HOST=http://selenium:4444/wd/hub
+  db:
+    image: postgres
+  redis:
+    image: redis
+  selenium:
+    image: selenium/standalone-chrome-debug
+    ports:
+      - 4444:4444   # Selenium
+      - 5900:5900   # VNC
