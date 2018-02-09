@@ -6,13 +6,13 @@ from django.utils.decorators import method_decorator
 
 # Create your views here.
 class IndexView(TemplateView):
-    template_name = 'index.html'
+    template_name = 'dash/index.html'
 
 
 
 @method_decorator(login_required, name='dispatch')
 class LeaderView(TemplateView):
-    template_name = 'index.html'
+    template_name = 'dash/index.html'
 
     def get(self, request, **kwargs):
         return HttpResponse('result')
@@ -20,7 +20,7 @@ class LeaderView(TemplateView):
 
 @method_decorator(login_required, name='dispatch')
 class WorkerView(TemplateView):
-    template_name = 'index.html'
+    template_name = 'dash/index.html'
 
     def get(self, request, **kwargs):
         return HttpResponse('result')
