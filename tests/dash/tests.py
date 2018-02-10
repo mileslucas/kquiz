@@ -18,7 +18,7 @@ class IndexViewTest(TestCase):
     def test_login_if_not_authorized(self):
         # Uses one-off unauthroized client
         response = Client().get(reverse('index'))
-        self.assertRedirects(response, reverse('login'))
+        self.assertRedirects(response, reverse('login') + '?next=/')
 
     def test_template(self):
         self.assertTemplateUsed(self.response, 'dash/index.html')

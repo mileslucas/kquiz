@@ -15,5 +15,10 @@ services:
       - .env
   db:
     image: postgres
+    volumes:
+      - data:/var/lib/postgresql
   redis:
     image: redis
+
+volumes:
+  data: {}
