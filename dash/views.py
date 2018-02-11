@@ -10,19 +10,12 @@ class IndexView(TemplateView):
     template_name = 'dash/index.html'
 
 
+@method_decorator(login_required, name='dispatch')
+class DispatcherView(TemplateView):
+    template_name = 'dash/dispatcher/dispatcher.html'
 
 
 @method_decorator(login_required, name='dispatch')
-class LeaderView(TemplateView):
-    template_name = 'dash/index.html'
+class ResearcherView(TemplateView):
+    template_name = 'dash/researcher/researcher.html'
 
-    def get(self, request, **kwargs):
-        return HttpResponse('result')
-
-
-@method_decorator(login_required, name='dispatch')
-class WorkerView(TemplateView):
-    template_name = 'dash/index.html'
-
-    def get(self, request, **kwargs):
-        return HttpResponse('result')

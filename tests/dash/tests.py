@@ -2,18 +2,19 @@ from django.test import TestCase, Client
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.urls import reverse, resolve
 from django.contrib.auth.models import User
-
+from django_webtest import WebTest
+from django.utils import timezone
 
 from dash.views import *
+from dash.models import *
 # Create your tests here.
 
 
-class IndexViewTest(TestCase):
+class IndevViewTest(WebTest):
+
     def setUp(self):
-        self.client = Client()
         self.user = User.objects.create_user(username='testuser')
-        self.client.force_login(self.user)
-        self.response = self.client.get(reverse('index'))
+        self.index = self.app.get(reverse('index'), user=self.user)
 
     def test_login_if_not_authorized(self):
         # Uses one-off unauthroized client
@@ -21,7 +22,37 @@ class IndexViewTest(TestCase):
         self.assertRedirects(response, reverse('login') + '?next=/')
 
     def test_template(self):
-        self.assertTemplateUsed(self.response, 'dash/index.html')
+        self.assertTemplateUsed(self.index, 'dash/index.html')
 
     def test_text(self):
-        self.assertContains(self.response, 'Choose View')
+        self.assertContains(self.index, 'Choose View')
+
+    def test_links_dispatcher(self):
+        link = self.index.click('Dispatcher')
+        self.assertTemplateUsed(link, 'dash/dispatcher/dispatcher.html')
+
+    def test_links_researcher(self):
+        link = self.index.click('Researcher')
+        self.assertTemplateUsed(link, 'dash/researcher/researcher.html')
+
+class LoginViewTest(WebTest):
+    def setUp(self):
+        self.index = self.app.get(reverse('login'))
+        form = self.index.form
+        form['username'] = 'root'
+        form['password'] = 'merl1nd0g'
+        self.response = form.submit('Login')
+
+    def test_template(self):
+        self.assertTemplateUsed(self.index, 'registration/login.html')
+
+
+
+class QuestionModelTest(TestCase):
+    def setUp(self):
+        pass
+        # self.question = Question(text='This is a test question', duration=)
+
+class AnswerModelTest(TestCase):
+    def setUp(self):
+        pass
