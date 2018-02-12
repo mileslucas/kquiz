@@ -50,9 +50,31 @@ class LoginViewTest(WebTest):
 
 class QuestionModelTest(TestCase):
     def setUp(self):
-        pass
-        # self.question = Question(text='This is a test question', duration=)
+        self.question = Question.objects.create(text='Test Question')
+
+    def test_text(self):
+        self.assertEqual(self.question.text, 'Test Question')
+
 
 class AnswerModelTest(TestCase):
     def setUp(self):
-        pass
+        self.user = User.objects.create(username='Jon', password='Test')
+        self.question = Question.objects.create(text='Test Question')
+        self.answer = Answer.objects.create(question=self.question, researcher=self.user, text='Sample Answer')
+
+    def test_text(self):
+        self.assertEqual(self.answer.text, 'Sample Answer')
+
+    def test_user(self):
+        self.assertEqual(self.answer.researcher, self.user)
+
+    def test_question(self):
+        self.assertEqual(self.answer.question, self.question)
+
+class ProfileModelTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create(username='Jon', password='Test')
+        self.profile = Profile.objects.create(user=self.user)
+
+    def test_user(self):
+        self.assertEqual(self.profile.user, self.user)
