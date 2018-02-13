@@ -5,4 +5,12 @@
 
     <h>Dispatcher</h>
 
+    <h>Current Question</h>
+    {{  current_question }}
+
+    <p>Previous Questions</p>
+    {% for q in questions %}
+    <p>{{ q }}</p>
+    {% endfor %}
+
 {% endblock %}
