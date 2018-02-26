@@ -1,10 +1,7 @@
 from django.contrib import admin
-from .models import Question, Answer
-class QuestionAdmin(admin.ModelAdmin):
-    def save_model(self, request, obj, form, change):
-        if not change:
-            obj.dispatcher = request.user
-        super().save_model(request, obj, form, change)
+from .models import Question, Answer, Profile
 
-admin.site.register(Question, QuestionAdmin);
+admin.site.register(Question)
+admin.site.register(Answer)
+admin.site.register(Profile)
 # Register your models here.

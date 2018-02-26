@@ -39,6 +39,12 @@ class QuestionCreateView(CreateView):
     fields = ['text', 'duration_value', 'duration_factor']
     success_url = '/dispatcher/'
 
+    def form_valid(self, form):
+        q = form.save(commit=False)
+        q.dispatcher = self.request.user
+        q.save()
+        return super().form_valid(form)
+
 @method_decorator(login_required, name='dispatch')
 class QuestionUpdateView(UpdateView):
     template_name = 'dash/dispatcher/question/create.html'

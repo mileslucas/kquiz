@@ -3,9 +3,9 @@
 
 {% block content %}
 
-    <h>Dispatcher</h>
-
-    <h>Current Question</h>
+    <h1>Dispatcher</h1>
+    <p><a href="{% url 'add_question' %}">Add a Question</a></p>
+    <h2>Current Question</h2>
     {{  current_question }}
 
     <p>Previous Questions</p>
