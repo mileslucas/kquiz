@@ -13,6 +13,10 @@ class RegisterView(FormView):
     form_class = CustomUserCreationForm
     success_url = '/login/'
 
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+
 @method_decorator(login_required, name='dispatch')
 class IndexView(TemplateView):
     template_name = 'dash/index.html'
