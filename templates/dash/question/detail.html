@@ -7,18 +7,20 @@
     <p>{{ object.text }}</p>
     {% if object.completed %}
         <p>Completed</p>
+        <p>Time done: {{ object.time_done }}</p>
     {% else %}
         <p>Time left: {{ object.time_left }}</p>
     {% endif %}
-    <p> Answers: </p>
+    <p> Answers given: </p>
     {% for answer in object.answer_set.all %}
         <p>{{ answer.text }} - {{ answer.researcher }}</p>
+    {% empty %}
+        <p> No answers given!</p>
     {% endfor %}
-    {% if object.dispatcher == request.user %}
+    {% if object.creator == request.user %}
 
         {% if not object.completed %}
             <p><a href="{% url 'update_question' object.pk %}">Edit</a></p>
-            <p><a href="{% url 'remove_question' object.pk %}">Remove</a></p>
         {% endif %}
     {% else %}
         <P>Asked by {{ object.dispatcher.first_name }}</P>

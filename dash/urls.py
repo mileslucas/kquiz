@@ -13,7 +13,7 @@ urlpatterns = [
     path('question', QuestionListView.as_view(), name='questions'),
     path('question/add', QuestionCreateView.as_view(), name='add_question'),
     path('question/<int:pk>', QuestionDetailView.as_view(), name='detail_question'),
-    path('question/<int:pk>/update', QuestionUpdateView.as_view(), name='update_question'),
-    path('question/<int:pk>/remove', QuestionDeleteView.as_view(), name='remove_question'),
-    # path('<int:pk>', ResearcherView.as_view(), name='add_answer'),
+    path('question/update/<int:pk>', QuestionUpdateView.as_view(), name='update_question'),
+    path('question/remove/<int:pk>', QuestionDeleteView.as_view(), name='remove_question'),
+    path('answer/add/<int:pk>', AnswerCreateView.as_view(), name='add_answer'),
 ]

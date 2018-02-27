@@ -15,7 +15,7 @@ class Question(models.Model):
         (1, 'sec')
     )
     duration_factor = models.IntegerField(choices=UNITS, default=60)
-    dispatcher = models.ForeignKey(User, on_delete=models.CASCADE, editable=False)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, editable=False)
     @property
     def time_done(self):
         seconds = self.duration_value * self.duration_factor
@@ -32,7 +32,7 @@ class Question(models.Model):
 
 class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    researcher = models.ForeignKey(User, on_delete=models.CASCADE, editable=False)
+    responder = models.ForeignKey(User, on_delete=models.CASCADE, editable=False)
     text = models.TextField()
     time_posted = models.DateTimeField(auto_now_add=True)
 

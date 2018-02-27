@@ -25,7 +25,7 @@ class DashView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['cqs'] = [q for q in Question.objects.all() if not q.completed]
-        context['questions'] = [q for q in Question.objects.order_by('-time_posted') if q.completed][:5]
+        context['questions'] = [q for q in Question.objects.order_by('-time_posted') if q.completed][:3]
         return context
 
 @method_decorator(login_required, name='dispatch')
@@ -42,7 +42,7 @@ class QuestionCreateView(CreateView):
 
     def form_valid(self, form):
         q = form.save(commit=False)
-        q.dispatcher = self.request.user
+        q.creator = self.request.user
         q.save()
         return super().form_valid(form)
 
@@ -66,7 +66,7 @@ class QuestionUpdateView(UpdateView):
     def get_object(self, queryset=None):
         """ Hook to ensure object is owned by request.user. """
         obj = super().get_object()
-        if not obj.dispatcher == self.request.user:
+        if not obj.creator == self.request.user:
             raise Http404
         return obj
 
@@ -79,7 +79,7 @@ class QuestionDeleteView(DeleteView):
     def get_object(self, queryset=None):
         """ Hook to ensure object is owned by request.user. """
         obj = super().get_object()
-        if not obj.dispatcher == self.request.user:
+        if not obj.creator == self.request.user:
             raise Http404
         return obj
 
@@ -89,3 +89,18 @@ class ProfileView(DetailView):
     template_name = 'dash/profile/detail.html'
     model = User
     slug_field = 'username'
+
+@method_decorator(login_required, name='dispatch')
+class AnswerCreateView(CreateView):
+    template_name = 'dash/answer/create.html'
+    model = Answer
+    fields = ['text']
+    success_url = '/'
+
+    def form_valid(self, form):
+        a = form.save(commit=False)
+        a.responder = self.request.user
+        q_id = self.request.path.split('/')[-1]
+        a.question = Question.objects.get(id=q_id)
+        a.save()
+        return super().form_valid(form)

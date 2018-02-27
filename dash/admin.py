@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import Question, Answer
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ('text', 'completed', 'time_left', 'time_posted', 'dispatcher')
+    list_display = ('text', 'completed', 'time_left', 'time_posted', 'creator')
     def save_model(self, request, obj, form, change):
         if not change:
             obj.dispatcher = request.user
