@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, reverse, render, Http404
 from django.views.generic import TemplateView, CreateView, FormView, UpdateView, DeleteView, DetailView, ListView
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
 from .forms import CustomUserCreationForm
 from django.conf import settings
@@ -86,5 +87,5 @@ class QuestionDeleteView(DeleteView):
 @method_decorator(login_required, name='dispatch')
 class ProfileView(DetailView):
     template_name = 'dash/profile/detail.html'
-    model = Profile
-    fields = ['questions', 'answers']
+    model = User
+    slug_field = 'username'

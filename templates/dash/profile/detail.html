@@ -3,9 +3,9 @@
 
 {% block content %}
 
-    <h1>{{ object }}</h1>
+    <h1>{{ object.get_full_name }}</h1>
     <h3>Questions Asked</h3>
-    {% for q in object.questions %}
+    {% for q in object.question_set.all %}
         <p><a href="{% url 'detail_question' q.pk %}">{{ q }}</a></p>
         <p>{{ q.text }}</p>
     {% empty %}
@@ -13,7 +13,7 @@
     {% endfor %}
 
     <h3>Answers Given</h3>
-    {% for a in object.answers %}
+    {% for a in object.answer_set.all %}
         <p>{{ a }} - <a href="{% url 'detail_question' a.question.pk %}">{{ a.question }}</a></p>
     {% empty %}
      <p>No answers given!</p>

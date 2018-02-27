@@ -41,12 +41,6 @@ class Answer(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, editable=False)
-    @property
-    def questions(self):
-        return self.user.question_set.all()
-    @property
-    def answers(self):
-        return self.user.answer_set.all()
     # TODO think about cool statistics to store in here
     def __str__(self):
         return self.user.get_full_name()
