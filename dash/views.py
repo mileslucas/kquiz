@@ -25,7 +25,13 @@ class IndexView(TemplateView):
 @method_decorator(login_required, name='dispatch')
 class DispatcherView(TemplateView):
     template_name = 'dash/dispatcher/dispatcher.html'
-    questions = Question.objects.all()[:5]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['current_question'] = Question.objects.all()[0]
+        context['questions'] = Question.objects.all()[1:6]
+        return context
+
 
 
 @method_decorator(login_required, name='dispatch')
@@ -51,6 +57,10 @@ class QuestionUpdateView(UpdateView):
     model = Question
     fields = ['text', 'duration_value', 'duration_factor']
     success_url = '/dispatcher/'
+
+    def form_valid(self, form):
+        self.object.update(form.cl)
+
 
 @method_decorator(login_required, name='dispatch')
 class QuestionDeleteView(DeleteView):
