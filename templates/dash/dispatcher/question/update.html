@@ -3,12 +3,20 @@
 
 {% block content %}
 
-    <h1>Update Question</h1>
+    <h1>Question {{ object.pk }}</h1>
+    {% if object.completed %}
+        <P>{{ object.text }}</P>
+        {% for answer in object.answer_set.all %}
+            <p>{{ answer.text }} - {{ answer.researcher }}</p>
+        {% endfor %}
+        <P>Asked by {{ object.dispatcher.first_name }}</P>
+    {% else %}
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Submit</button>
     </form>
+    {% endif %}
     <p><a href="{% url 'remove_question' object.pk%}">Remove Question</a></p>
 
 {% endblock %}

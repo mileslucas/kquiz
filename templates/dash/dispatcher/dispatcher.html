@@ -8,7 +8,7 @@
     <h2>Current Question</h2>
     <p><a href="{% url 'detail_question' current_question.pk %}">{{  current_question }}</a></p>
 
-    <p>Previous Questions</p>
+    <h2>Previous Questions</h2>
     {% for q in questions %}
         <p><a href="{% url 'detail_question' q.pk %}">{{ q }}</a></p>
     {% endfor %}
