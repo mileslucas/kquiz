@@ -28,7 +28,7 @@ class Question(models.Model):
         return self.time_done - timezone.now()
 
     def __str__(self):
-        return self.text
+        return f'Question {self.pk}'
 
 class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
@@ -42,6 +42,8 @@ class Answer(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, editable=False)
     # TODO think about cool statistics to store in here
+    def __str__(self):
+        return f'{self.first_name} {self.last_name}'
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

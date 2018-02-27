@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}researcher{% endblock %}
+{% block title %}Researcher{% endblock %}
 
 {% block content %}
 
@@ -9,7 +9,9 @@
     <p>No current question</p>
     {% else %}
         {% for q in cqs %}
-            <p><a href="{% url 'detail_question' q.pk %}">{{ q }} {{ q.time_left }}</a></p>
+            <h3>{{ q }}</h3>
+            <p>Time left: {{ q.time_left }}</p>
+            <p>{{ q.text }}</p>
             <p>Answers: </p>
             {% for ans in q.answer_set.all %}
                 <p>{{ ans }}</p>

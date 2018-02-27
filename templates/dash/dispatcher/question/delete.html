@@ -1,13 +1,13 @@
 {% extends "base.html" %}
-{% block title %}delete{% endblock %}
+{% block title %}Delete {{ object }}{% endblock %}
 
 {% block content %}
 
-    <p>Are you sure you want to delete question {{ object.pk }}?</p>
-    <p>{{ object }}</p>
+    <p>Are you sure you want to delete {{ object }}?</p>
+    <p>{{ object.text }}</p>
 
     <form action="{% url 'remove_question' object.pk %}" method="post">{% csrf_token %}<button type="submit">Yes</button></form>
-    <form action="{% url 'dispatcher' %}">{% csrf_token %}<button type="submit">No</button></form>
+    <form action="{% url 'update_question' object.pk %}">{% csrf_token %}<button type="submit">No</button></form>
 
 
 {% endblock %}

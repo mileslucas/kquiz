@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{{ dispatcher }}{% endblock %}
+{% block title %}Dispatcher{% endblock %}
 
 {% block content %}
 
@@ -10,7 +10,9 @@
     <p>No current question</p>
     {% else %}
         {% for q in cqs %}
-            <p><a href="{% url 'detail_question' q.pk %}">{{ q }} {{ q.time_left }}</a></p>
+            <p><a href="{% url 'detail_question' q.pk %}">{{ q }}</a></p>
+            <p>Time left: {{ q.time_left }}</p>
+            <p>{{ q.text }}</p>
             {% for ans in q.answer_set.all %}
                 <p>{{ ans }}</p>
             {% endfor %}

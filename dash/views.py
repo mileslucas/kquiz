@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, reverse, render, Http404
-from django.views.generic import TemplateView, CreateView, FormView, UpdateView, DeleteView, DetailView
+from django.views.generic import TemplateView, CreateView, FormView, UpdateView, DeleteView, DetailView, ListView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from .forms import CustomUserCreationForm
@@ -29,7 +29,7 @@ class DispatcherView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['cqs'] = [q for q in Question.objects.all() if not q.completed]
-        context['questions'] = [q for q in Question.objects.all() if q.completed][:5]
+        context['questions'] = [q for q in Question.objects.order_by('-time_posted') if q.completed][:5]
         return context
 
 
@@ -43,7 +43,7 @@ class ResearcherView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['cqs'] = [q for q in Question.objects.all() if not q.completed]
+        context['cqs'] = [q for q in Question.objects.order_by('-time_posted') if not q.completed]
         return context
 
     def form_valid(self, form):
@@ -53,6 +53,10 @@ class ResearcherView(CreateView):
         a.question = Question.objects.get(id=q_id)
         return super().form_valid(form)
 
+@method_decorator(login_required, name='dispatch')
+class QuestionListView(ListView):
+    template_name = 'dash/dispatcher/question/list.html'
+    model = Question
 
 @method_decorator(login_required, name='dispatch')
 class QuestionCreateView(CreateView):

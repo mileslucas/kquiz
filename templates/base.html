@@ -2,12 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}KQuiz{% endblock %}</title>
+    <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
 
 {% if user.is_authenticated %}
-    Signed in as {{ user.get_full_name }}
+    <a href="{% url 'index' %}">Home</a>
+    <a href="{% url 'dispatcher' %}">Dispatcher</a>
+    <a href="{% url 'researcher' %}">Researcher</a>
+    <a href="{% url 'questions' %}">Questions</a>
+    <a href="{% url 'index' %}">Home</a>
+       Signed in as {{ user.get_full_name }}
     <a href="{% url 'logout' %}">Logout</a>
 {% endif %}
 
