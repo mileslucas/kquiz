@@ -4,6 +4,7 @@ from django.forms import ModelForm
 from django import forms
 from .models import Question, Answer
 
+
 class CustomUserCreationForm(UserCreationForm):
     first_name = forms.CharField(max_length=100, label="First Name", required=True,
         help_text="Required.")

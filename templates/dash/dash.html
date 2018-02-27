@@ -2,20 +2,16 @@
 {% block title %}Home{% endblock %}
 {% block content %}
     {% load timedelta_filter %}
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            setInterval(function () {
-                $.ajax({
-                    url: '{% url 'dash' %}',
-                    success: function (data) {
-                        $('#current').html(data);
-                    }
-                });
-            }, 1000);
-        });
+
+    <script>
+        setTimeout(function () {
+            $('body').load('{% url 'dash' %}')
+        }, 1000);
     </script>
 
+
     <h1>ISUPAC Kaleidoquiz Home</h1>
+
     <h2>Current Question</h2>
     <p><a href="{% url 'add_question' %}">Add a Question</a></p>
     {% if not cqs %}
@@ -28,7 +24,7 @@
                 <p>{{ q.text }}</p>
                 <p>Answers: </p>
                 {% for ans in q.answer_set.all %}
-                    <p><a href="{% url 'update_answer' ans.pk %}">{{ forloop.counter }}</a>) {{ ans }} - <a
+                    <p><a href="{% url 'update_answer' ans.pk %}">{{ forloop.counter }}</a>. {{ ans }} - <a
                             href="{% url 'profile' ans.responder.username %}">{{ ans.responder.get_full_name }}</a></p>
                 {% endfor %}
                 <form action="{% url 'add_answer' q.pk %}">

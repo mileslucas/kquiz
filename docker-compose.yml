@@ -3,17 +3,21 @@ version: '3'
 services:
   web:
     build: .
-    command: python3 manage.py runserver 0.0.0.0:8000
+    command: /usr/local/wait-for-it.sh db:5432 --strict -- python3 manage.py runserver 0.0.0.0:8000
     volumes:
-      - .:/code
+      - .:/app
     ports:
       - "8000:8000"
     depends_on:
       - db
     env_file:
       - .env
+
   db:
-    image: postgres
+    image: postgres:alpine
     restart: always
     volumes:
-      - ~/dev/data/kquiz_data:/var/lib/postgresql
+      - data:/var/lib/postgresql/data
+
+volumes:
+  data:
