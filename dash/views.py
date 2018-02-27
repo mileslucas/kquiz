@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, reverse, render
+from django.shortcuts import redirect, reverse, render, Http404
 from django.views.generic import TemplateView, CreateView, FormView, UpdateView, DeleteView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -65,6 +65,14 @@ class QuestionUpdateView(UpdateView):
 
 @method_decorator(login_required, name='dispatch')
 class QuestionDeleteView(DeleteView):
+    template_name = 'dash/dispatcher/question/delete.html'
     model = Question
     success_url = '/dispatcher/'
+    def get_object(self, queryset=None):
+        """ Hook to ensure object is owned by request.user. """
+        obj = super().get_object()
+        if not obj.dispatcher == self.request.user:
+            raise Http404
+        return obj
+
 

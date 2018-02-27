@@ -20,10 +20,12 @@ class Question(models.Model):
     def time_done(self):
         seconds = self.duration_value * self.duration_factor
         return self.time_posted + timezone.timedelta(seconds=seconds)
-
     @property
     def completed(self):
         return self.time_done < timezone.now()
+    @property
+    def time_left(self):
+        return self.time_done - timezone.now()
 
     def __str__(self):
         return self.text

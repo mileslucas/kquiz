@@ -10,7 +10,10 @@
     <p>No current question</p>
     {% else %}
         {% for q in cqs %}
-            <p><a href="{% url 'detail_question' q.pk %}">{{  q }}</a></p>
+            <p><a href="{% url 'detail_question' q.pk %}">{{ q }} {{ q.time_left }}</a></p>
+            {% for ans in q.answer_set.all %}
+                <p>{{ ans }}</p>
+            {% endfor %}
         {% endfor %}
     {% endif %}
     <h2>Previous Questions</h2>
