@@ -35,8 +35,24 @@ class DispatcherView(TemplateView):
 
 
 @method_decorator(login_required, name='dispatch')
-class ResearcherView(TemplateView):
-    template_name = 'dash/researcher/researcher.html'
+class ResearcherView(CreateView):
+    template_name = 'dash/researcher/frickyou.html'
+    model = Answer
+    fields = ['text']
+    success_url = '/researcher/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['cqs'] = [q for q in Question.objects.all() if not q.completed]
+        return context
+
+    def form_valid(self, form):
+        a = form.save(commit=False)
+        a.researcher = self.request.user
+        q_id = int(self.request.path.split("researcher/", 1)[1])
+        a.question = Question.objects.get(id=q_id)
+        return super().form_valid(form)
+
 
 @method_decorator(login_required, name='dispatch')
 class QuestionCreateView(CreateView):

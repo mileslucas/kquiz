@@ -10,6 +10,7 @@
     {% else %}
     <p>Time left: {{ object.time_left }}</p>
     {% endif %}
+    <p> Answers: </p>
     {% for answer in object.answer_set.all %}
         <p>{{ answer.text }} - {{ answer.researcher }}</p>
     {% endfor %}
