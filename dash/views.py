@@ -28,8 +28,8 @@ class DispatcherView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['current_question'] = Question.objects.all()[0]
-        context['questions'] = Question.objects.all()[1:6]
+        context['cqs'] = [q for q in Question.objects.all() if not q.completed]
+        context['questions'] = [q for q in Question.objects.all() if q.completed][:5]
         return context
 
 

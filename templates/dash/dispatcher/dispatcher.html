@@ -6,11 +6,18 @@
     <h1>Dispatcher</h1>
     <p><a href="{% url 'add_question' %}">Add a Question</a></p>
     <h2>Current Question</h2>
-    <p><a href="{% url 'detail_question' current_question.pk %}">{{  current_question }}</a></p>
-
+    {% if not cqs %}
+    <p>No current question</p>
+    {% else %}
+        {% for q in cqs %}
+            <p><a href="{% url 'detail_question' q.pk %}">{{  q }}</a></p>
+        {% endfor %}
+    {% endif %}
     <h2>Previous Questions</h2>
     {% for q in questions %}
         <p><a href="{% url 'detail_question' q.pk %}">{{ q }}</a></p>
+    {% empty %}
+        <p>No questions asked yet.</p>
     {% endfor %}
 
 {% endblock %}
