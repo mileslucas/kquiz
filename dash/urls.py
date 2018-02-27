@@ -12,5 +12,6 @@ urlpatterns = [
     path('dispatcher/', DispatcherView.as_view(), name='dispatcher'),
     path('researcher/', ResearcherView.as_view(), name='researcher'),
     path('dispatcher/question/add', QuestionCreateView.as_view(), name='add_question'),
-    path('dispatcher/question/<int:pk>', QuestionUpdateView.as_view(), name='detail_question')
+    path('dispatcher/question/<int:pk>', QuestionUpdateView.as_view(), name='detail_question'),
+    path('dispatcher/question/<int:pk>/remove', QuestionDeleteView.as_view(), name='remove_question')
 ]

@@ -53,18 +53,18 @@ class QuestionCreateView(CreateView):
 
 @method_decorator(login_required, name='dispatch')
 class QuestionUpdateView(UpdateView):
-    template_name = 'dash/dispatcher/question/create.html'
+    template_name = 'dash/dispatcher/question/update.html'
     model = Question
     fields = ['text', 'duration_value', 'duration_factor']
     success_url = '/dispatcher/'
 
     def form_valid(self, form):
-        self.object.update(form.cl)
+        form.save()
+        return super().form_valid(form)
 
 
 @method_decorator(login_required, name='dispatch')
 class QuestionDeleteView(DeleteView):
     model = Question
-    fields = ['text', 'duration_value', 'duration_factor']
     success_url = '/dispatcher/'
 
