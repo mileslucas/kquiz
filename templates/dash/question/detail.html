@@ -18,12 +18,13 @@
         <p> No answers given!</p>
     {% endfor %}
     {% if object.creator == request.user %}
-
         {% if not object.completed %}
             <p><a href="{% url 'update_question' object.pk %}">Edit</a></p>
+        {% else %}
+            <p>Asked by yourself.</p>
         {% endif %}
     {% else %}
-        <p>Asked by <a href="{% url 'profile' object.creator.username %}">{{ object.creator.get_full_name }}</a></p>
+        <p>Asked by <a href="{% url 'profile' object.creator.username %}">{{ object.creator.get_full_name }}</a>.</p>
     {% endif %}
 
 {% endblock %}
