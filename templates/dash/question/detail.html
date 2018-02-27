@@ -13,7 +13,7 @@
     {% endif %}
     <p> Answers given: </p>
     {% for answer in object.answer_set.all %}
-        <p>{{ answer.text }} - {{ answer.researcher }}</p>
+        <p>{{ answer.text }} - <a href="{% url 'profile' answer.responder.username %}">{{ answer.responder.get_full_name }}</a></p>
     {% empty %}
         <p> No answers given!</p>
     {% endfor %}
