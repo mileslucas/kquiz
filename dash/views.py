@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, reverse, render, Http404
-from django.views.generic import TemplateView, CreateView, FormView, UpdateView, DeleteView
+from django.views.generic import TemplateView, CreateView, FormView, UpdateView, DeleteView, DetailView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from .forms import CustomUserCreationForm
@@ -52,6 +52,12 @@ class QuestionCreateView(CreateView):
         return super().form_valid(form)
 
 @method_decorator(login_required, name='dispatch')
+class QuestionDetailView(DetailView):
+    template_name = 'dash/dispatcher/question/detail.html'
+    model = Question
+    fields = ['text', 'duration_value', 'duration_factor']
+
+@method_decorator(login_required, name='dispatch')
 class QuestionUpdateView(UpdateView):
     template_name = 'dash/dispatcher/question/update.html'
     model = Question
@@ -61,6 +67,13 @@ class QuestionUpdateView(UpdateView):
     def form_valid(self, form):
         form.save()
         return super().form_valid(form)
+
+    def get_object(self, queryset=None):
+        """ Hook to ensure object is owned by request.user. """
+        obj = super().get_object()
+        if not obj.dispatcher == self.request.user:
+            raise Http404
+        return obj
 
 
 @method_decorator(login_required, name='dispatch')

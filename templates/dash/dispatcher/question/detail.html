@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}detail{% endblock %}
+
+{% block content %}
+
+    <h1>Question {{ object.pk }}</h1>
+    <P>{{ object.text }}</P>
+    {% if object.completed %}
+    <p>Completed</p>
+    {% else %}
+    <p>Time left: {{ object.time_left }}</p>
+    {% endif %}
+    {% for answer in object.answer_set.all %}
+        <p>{{ answer.text }} - {{ answer.researcher }}</p>
+    {% endfor %}
+    {% if object.dispatcher == request.user %}
+    <p><a href="{% url 'update_question' object.pk %}">Edit</a></p>
+    <p><a href="{% url 'remove_question' object.pk %}">Remove</a></p>
+    {% else %}
+    <P>Asked by {{ object.dispatcher.first_name }}</P>
+    {% endif %}
+
+{% endblock %}
