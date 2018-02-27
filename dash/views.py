@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from .forms import CustomUserCreationForm
 from django.conf import settings
-from .models import Question, Answer
+from .models import Question, Answer, Profile
 from django.utils import timezone
 
 class RegisterView(FormView):
@@ -18,13 +18,8 @@ class RegisterView(FormView):
         return super().form_valid(form)
 
 @method_decorator(login_required, name='dispatch')
-class IndexView(TemplateView):
-    template_name = 'dash/index.html'
-
-
-@method_decorator(login_required, name='dispatch')
-class DispatcherView(TemplateView):
-    template_name = 'dash/dispatcher/dispatcher.html'
+class DashView(TemplateView):
+    template_name = 'dash/dash.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -32,38 +27,17 @@ class DispatcherView(TemplateView):
         context['questions'] = [q for q in Question.objects.order_by('-time_posted') if q.completed][:5]
         return context
 
-
-
-@method_decorator(login_required, name='dispatch')
-class ResearcherView(CreateView):
-    template_name = 'dash/researcher/frickyou.html'
-    model = Answer
-    fields = ['text']
-    success_url = '/researcher/'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['cqs'] = [q for q in Question.objects.order_by('-time_posted') if not q.completed]
-        return context
-
-    def form_valid(self, form):
-        a = form.save(commit=False)
-        a.researcher = self.request.user
-        q_id = int(self.request.path.split("researcher/", 1)[1])
-        a.question = Question.objects.get(id=q_id)
-        return super().form_valid(form)
-
 @method_decorator(login_required, name='dispatch')
 class QuestionListView(ListView):
-    template_name = 'dash/dispatcher/question/list.html'
+    template_name = 'dash/question/list.html'
     model = Question
 
 @method_decorator(login_required, name='dispatch')
 class QuestionCreateView(CreateView):
-    template_name = 'dash/dispatcher/question/create.html'
+    template_name = 'dash/question/create.html'
     model = Question
     fields = ['text', 'duration_value', 'duration_factor']
-    success_url = '/dispatcher/'
+    success_url = '/'
 
     def form_valid(self, form):
         q = form.save(commit=False)
@@ -73,16 +47,16 @@ class QuestionCreateView(CreateView):
 
 @method_decorator(login_required, name='dispatch')
 class QuestionDetailView(DetailView):
-    template_name = 'dash/dispatcher/question/detail.html'
+    template_name = 'dash/question/detail.html'
     model = Question
     fields = ['text', 'duration_value', 'duration_factor']
 
 @method_decorator(login_required, name='dispatch')
 class QuestionUpdateView(UpdateView):
-    template_name = 'dash/dispatcher/question/update.html'
+    template_name = 'dash/question/update.html'
     model = Question
     fields = ['text', 'duration_value', 'duration_factor']
-    success_url = '/dispatcher/'
+    success_url = '/'
 
     def form_valid(self, form):
         form.save()
@@ -98,9 +72,9 @@ class QuestionUpdateView(UpdateView):
 
 @method_decorator(login_required, name='dispatch')
 class QuestionDeleteView(DeleteView):
-    template_name = 'dash/dispatcher/question/delete.html'
+    template_name = 'dash/question/delete.html'
     model = Question
-    success_url = '/dispatcher/'
+    success_url = '/'
     def get_object(self, queryset=None):
         """ Hook to ensure object is owned by request.user. """
         obj = super().get_object()
@@ -109,3 +83,8 @@ class QuestionDeleteView(DeleteView):
         return obj
 
 
+@method_decorator(login_required, name='dispatch')
+class ProfileView(DetailView):
+    template_name = 'dash/profile/detail.html'
+    model = Profile
+    fields = ['questions', 'answers']

@@ -5,16 +5,15 @@ from .views import *
 
 
 urlpatterns = [
-    path('', IndexView.as_view(), name='index'),
+    path('', DashView.as_view(), name='dash'),
     path('login/', LoginView.as_view(redirect_authenticated_user=True), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
+    path('user/<int:pk>', ProfileView.as_view(), name='profile'),
     path('register/', RegisterView.as_view(), name='register'),
-    path('dispatcher/', DispatcherView.as_view(), name='dispatcher'),
     path('question', QuestionListView.as_view(), name='questions'),
     path('question/add', QuestionCreateView.as_view(), name='add_question'),
     path('question/<int:pk>', QuestionDetailView.as_view(), name='detail_question'),
     path('question/<int:pk>/update', QuestionUpdateView.as_view(), name='update_question'),
     path('question/<int:pk>/remove', QuestionDeleteView.as_view(), name='remove_question'),
-    path('researcher/', ResearcherView.as_view(), name='researcher'),
-    path('researcher/<int:pk>', ResearcherView.as_view(), name='add_answer'),
+    # path('<int:pk>', ResearcherView.as_view(), name='add_answer'),
 ]

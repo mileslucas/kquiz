@@ -8,6 +8,7 @@
         {% for q in object_list %}
             <tr>
                 <td><a href="{% url 'detail_question' q.pk %}">{{ q.pk }}</a></td>
+                <td>{% if q.completed %} Completed {% endif %}</td>
                 <td>{{ q.time_posted }}</td>
                 <td>{{ q.text }}</td>
                 <td>{{ q.dispatcher }}</td>
