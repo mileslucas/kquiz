@@ -24,7 +24,13 @@
                 <p>{{ q.text }}</p>
                 <p>Answers: </p>
                 {% for ans in q.answer_set.all %}
-                    <p><a href="{% url 'update_answer' ans.pk %}">{{ forloop.counter }}</a>. {{ ans }} - <a
+                    <p>
+                        {% if ans.responder == request.user %}
+                            <a href="{% url 'update_answer' ans.pk %}">{{ forloop.counter }}</a>
+                        {% else %}
+                            {{ forloop.counter }}
+                        {% endif %}
+                        . {{ ans }} - <a
                             href="{% url 'profile' ans.responder.username %}">{{ ans.responder.get_full_name }}</a></p>
                 {% endfor %}
                 <form action="{% url 'add_answer' q.pk %}">
