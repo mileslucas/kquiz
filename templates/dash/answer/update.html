@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Answer{% endblock %}
+
+{% block content %}
+
+    <h1>Update an answer</h1>
+    <p>Question:</p>
+    <p>{{ object.question.text }}</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+    <a href="{% url 'remove_answer' object.pk %}">Remove answer</a>
+
+{% endblock %}

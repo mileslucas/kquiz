@@ -2,6 +2,7 @@ from django.shortcuts import redirect, reverse, render, Http404
 from django.views.generic import TemplateView, CreateView, FormView, UpdateView, DeleteView, DetailView, ListView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib import messages
 from django.utils.decorators import method_decorator
 from .forms import CustomUserCreationForm
 from django.conf import settings
@@ -104,3 +105,34 @@ class AnswerCreateView(CreateView):
         a.question = Question.objects.get(id=q_id)
         a.save()
         return super().form_valid(form)
+
+@method_decorator(login_required, name='dispatch')
+class AnswerUpdateView(UpdateView):
+    template_name = 'dash/answer/update.html'
+    model = Answer
+    fields = ['text']
+    success_url = '/'
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+
+    def get_object(self, queryset=None):
+        """ Hook to ensure object is owned by request.user. """
+        obj = super().get_object()
+        if not obj.responder == self.request.user:
+            raise Http404
+        return obj
+
+
+@method_decorator(login_required, name='dispatch')
+class AnswerDeleteView(DeleteView):
+    template_name = 'dash/answer/delete.html'
+    model = Answer
+    success_url = '/'
+    def get_object(self, queryset=None):
+        """ Hook to ensure object is owned by request.user. """
+        obj = super().get_object()
+        if not obj.responder == self.request.user:
+            raise Http404
+        return obj

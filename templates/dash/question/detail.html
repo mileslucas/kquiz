@@ -23,7 +23,7 @@
             <p><a href="{% url 'update_question' object.pk %}">Edit</a></p>
         {% endif %}
     {% else %}
-        <P>Asked by {{ object.dispatcher.first_name }}</P>
+        <p>Asked by <a href="{% url 'profile' object.creator.username %}">{{ object.creator.get_full_name }}</a></p>
     {% endif %}
 
 {% endblock %}
