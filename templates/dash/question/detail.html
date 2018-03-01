@@ -2,21 +2,44 @@
 {% block title %}{{ object }}{% endblock %}
 
 {% block content %}
+    {% load timedelta_filter %}
 
     <h1>Question {{ object.pk }}</h1>
-    <p>{{ object.text }}</p>
+    <blockquote class="blockquote">{{ object.text }}</blockquote>
     {% if object.completed %}
-        <p>Completed</p>
-        <p>Time done: {{ object.time_done }}</p>
+        <span class="badge badge-success">Completed</span>
+        <p>Time done: {{ object.time_done|date:"l f A" }}</p>
     {% else %}
-        <p>Time left: {{ object.time_left }}</p>
+        <span class="badge badge-primary">Open</span>
+        <p>Time left: {{ object.time_left|timedelta:"{minutes}:{seconds2}" }}</p>
     {% endif %}
-    <p> Answers given: </p>
-    {% for answer in object.answer_set.all %}
-        <p>{{ answer.text }} - <a href="{% url 'profile' answer.responder.username %}">{{ answer.responder.get_full_name }}</a></p>
-    {% empty %}
-        <p> No answers given!</p>
-    {% endfor %}
+    {% if object.answer_set.all %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Time</th>
+                <th>Answer</th>
+                <th>Responder</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for answer in object.answer_set.all %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ answer.time_posted|date:"D f A" }}</td>
+                <td>{{ answer.text }}</td>
+                <td><a href="{% url 'profile' answer.responder.username %}">{{ answer.responder.get_full_name }}</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <hr>
+        <p>No answers given!</p>
+        <hr>
+    {% endif %}
+
     {% if object.creator == request.user %}
         {% if not object.completed %}
             <p><a href="{% url 'update_question' object.pk %}">Edit</a></p>
