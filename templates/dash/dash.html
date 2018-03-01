@@ -1,16 +1,12 @@
 {% extends "base.html" %}
 {% block title %}Home{% endblock %}
+
+
 {% block content %}
     {% load timedelta_filter %}
     {% load bootstrap4 %}
 
 
-
-    <h1>ISUPAC Kaleidoquiz Home</h1>
-
-    <!-- Button trigger modal -->
-
-    <!-- Modal -->
     <div class="modal fade" id="addQuestion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -24,7 +20,7 @@
                 <div class="modal-body">
                     <form method="post" action="{% url 'add_question' %}" id="addquestion">
                         {% csrf_token %}
-                        {% bootstrap_form add_question_form %}
+                        {% bootstrap_form add_question_form show_label=False %}
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -37,95 +33,88 @@
         </div>
     </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="addAnswer" tabindex="-1" role="dialog" aria-labelledby="addAnswerLabel"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addAnswerLabel">Submit an Answer</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <h6>Question:</h6>
-                    <p>fake</p>
-                    <form method="post" action="" id="addanswer">
-                        {% csrf_token %}
-                        {% bootstrap_form add_answer_form %}
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" form="addanswer" class="btn btn-primary">Submit</button>
-                </div>
 
-
+    {% for q in cqs %}
+        <div class="card">
+            <div class="card-header question">
+                <h3 class="card-title">
+                    {{ q }}
+                    <small class="text-muted">{{ q.time_left|timedelta:"{minutes}:{seconds2}" }}</small>
+                </h3>
             </div>
-        </div>
-    </div>
+            <div class="card-body">
+                <blockquote class="blockquote">{{ q.text }}</blockquote>
+                {% if q.answer_set.all %}
+                    <table class="table table-hover">
+                        <thead class="thead-light">
+                        <tr>
+                            <th>Answers</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for ans in q.answer_set.all %}
+                            <tr class="clickable-row" data-href="{% url 'update_answer' ans.pk %}">
+                                <td>{{ ans.text }}</td>
+                                <td>{{ ans.responder.first_name }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <hr>
+                    <p>No answer yet!</p>
+                {% endif %}
 
-    <h2>Current Question</h2>
 
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addQuestion">
-        Add a Question
-    </button>
-    {% if not cqs %}
-        <p>No current question</p>
-    {% else %}
-        <div id="current">
-            {% for q in cqs %}
-                <h3><a href="{% url 'detail_question' q.pk %}">{{ q }}</a></h3>
-                <p>Time left: {{ q.time_left|timedelta:"{minutes2}:{seconds2}" }}</p>
-                <p>{{ q.text }}</p>
-                <p>Answers: </p>
-                {% for ans in q.answer_set.all %}
-                    <p>
-                        {% if ans.responder == request.user %}
-                            <a href="{% url 'update_answer' ans.pk %}">{{ forloop.counter }}</a>
-                        {% else %}
-                            {{ forloop.counter }}
-                        {% endif %}
-                        . {{ ans }} - <a
-                            href="{% url 'profile' ans.responder.username %}">{{ ans.responder.get_full_name }}</a></p>
-                {% endfor %}
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addAnswer"
-                        data-url="{% url 'add_answer' q.pk %}" data-qtext="{{ q.text }}">
+                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#answer"
+                        aria-expanded="false" aria-controls="answer" onclick="allowRefresh=false">
                     Answer
                 </button>
-            {% endfor %}
+
+                <div class="collapse" id="answer" onclick="switch">
+                    <form action="{% url 'add_answer' q.pk %}" method="post">
+                        {% csrf_token %}
+                        {% bootstrap_form add_answer_form show_label=False %}
+                        <input type="submit" style="display: none"/>
+                    </form>
+                </div>
+
+            </div>
+            <div class="card-footer">
+
+                <button type="button" class="btn" data-toggle="modal" data-target="#addQuestion">
+                    Add a Question
+                </button>
+            </div>
         </div>
-    {% endif %}
-
-
-    <h2>Previous Questions</h2>
-    {% for q in questions %}
-        <p><a href="{% url 'detail_question' q.pk %}">{{ q.text }}</a></p>
     {% empty %}
-        <p>No questions asked yet.</p>
+        <button type="button" class="btn" data-toggle="modal" data-target="#addQuestion">
+            Add a Question
+        </button>
     {% endfor %}
-    <p><a href="{% url 'questions' %}">View all</a></p>
 
 
 {% endblock %}
 
 {% block javascript %}
-<script>
-        setTimeout(function () {
-            $('body').load('{% url 'dash' %}')
-        }, 1000);
-    </script>
     <script>
-        $('#addAnswer').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);// Button that triggered the modal
-            var url = button.data('url'); // Extract info from data-* attributes
-            var qtext = button.data('qtext');
-            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-            var modal = $(this);
-            modal.find('#addanswer').attr('action', url);
-            modal.find('.modal-body p').text(qtext);
+        var allowRefresh = true;
+
+        $('#addQuestion').on('show.bs.modal', function () {
+            allowRefresh = false;
+        });
+        $('#addQuestion').on('hide.bs.modal', function () {
+            allowRefresh = true;
+            $('body').load('{% url 'dash' %}');
+        });
+        function refresh(){
+            if (allowRefresh) {
+                $('body').load('{% url 'dash' %}')
+            }
+        }
+        $(document).ready(function(){
+            setTimeout(refresh(), 10000);
         })
     </script>
 {% endblock %}

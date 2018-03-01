@@ -31,9 +31,9 @@ class Question(models.Model):
         return f'Question {self.pk}'
 
 class Answer(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, editable=False)
     responder = models.ForeignKey(User, on_delete=models.CASCADE, editable=False)
-    text = models.TextField()
+    text = models.CharField(max_length=800)
     time_posted = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

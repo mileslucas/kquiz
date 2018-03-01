@@ -8,8 +8,7 @@
 
     <form method="post">
         {% csrf_token %}
-        {% bootstrap_form_errors  form%}
-        {% bootstrap_form form %}
+        {% bootstrap_form form show_label=False%}
         {% buttons %}
             <button type="submit" class="btn">Login</button>
         {% endbuttons %}
