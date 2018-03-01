@@ -4,12 +4,54 @@
 {% block content %}
     {% load bootstrap4 %}
 
+    <!-- Removal Modal -->
+    <div class="modal fade" id="remove" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Are you sure?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to remove this question? This action cannot be undone.
+                    <form method="post" action="" id="removeform">
+                        {% csrf_token %}
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button type="submit" form="removeform" class="btn btn-danger">Yes</button>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
     <h1>{{ object }}</h1>
     <form method="post">
         {% csrf_token %}
-        {% bootstrap_form form %}
-        <button type="submit">Save</button>
+        {% bootstrap_form form show_label=False %}
+        <button class="btn btn-primary" type="submit">Save Changes</button>
+        <button class="btn" href="{% url 'dash' %}">Cancel</button>
+        <button class="btn btn-danger float-right" type="button" data-toggle="modal" data-target="#remove"
+                data-href="{% url 'remove_question' object.pk%}">Remove
+        </button>
     </form>
-    <p><a href="{% url 'remove_question' object.pk%}">Remove Question</a></p>
 
+{% endblock %}
+
+
+{% block javascript %}
+    <script>
+        $('#remove').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var url = button.data('href');
+            modal = $(this);
+            modal.find('.modal-body form').attr('action', url);
+        })
+    </script>
 {% endblock %}

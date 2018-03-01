@@ -9,12 +9,8 @@
     <form method="post">
         {% csrf_token %}
         {% bootstrap_form form show_label=False%}
-        {% buttons %}
-            <button type="submit" class="btn">Login</button>
-        {% endbuttons %}
+            <a class="btn btn-link" href="{% url 'register' %}">Register</a>
+            <button type="submit" class="btn float-right">Login</button>
     </form>
-    <a href="{% url 'register' %}">Register</a>
-
-
 
 {% endblock %}
