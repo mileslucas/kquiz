@@ -68,11 +68,11 @@
 
 
                 <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#answer"
-                        aria-expanded="false" aria-controls="answer" onclick="allowRefresh=false">
+                        aria-expanded="false" aria-controls="answer" id="answerbutton">
                     Answer
                 </button>
 
-                <div class="collapse" id="answer" onclick="switch">
+                <div class="collapse" style="margin-top: 10px" id="answer">
                     <form action="{% url 'add_answer' q.pk %}" method="post">
                         {% csrf_token %}
                         {% bootstrap_form add_answer_form show_label=False %}
@@ -106,14 +106,18 @@
         });
         $('#addQuestion').on('hide.bs.modal', function () {
             allowRefresh = true;
-            $('body').load('{% url 'dash' %}');
+            refresh();
         });
-        function refresh(){
+        $('#answerbutton').click(function(){
+            allowRefresh = !allowRefresh;
+            $(this).prop('value', '&times;');
+            refresh();
+        });
+        setTimeout(refresh, 1000);
+        function refresh() {
             if (allowRefresh) {
                 $('body').load('{% url 'dash' %}')
             }
         }
-
-        setTimeout(refresh(), 10000);
     </script>
 {% endblock %}
