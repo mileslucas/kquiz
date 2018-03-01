@@ -35,11 +35,14 @@
 
 
     {% for q in cqs %}
-        <div class="card">
+        <div class="card" style="margin-bottom: 20px">
             <div class="card-header question">
                 <h3 class="card-title">
                     {{ q }}
                     <small class="text-muted">{{ q.time_left|timedelta:"{minutes}:{seconds2}" }}</small>
+                    {% if request.user == q.creator %}
+                        <small><a class="badge badge-light" href="{% url 'update_question' q.pk %}">Edit</a></small>
+                    {% endif %}
                 </h3>
             </div>
             <div class="card-body">
@@ -63,7 +66,7 @@
                     </table>
                 {% else %}
                     <hr>
-                    <p>No answer yet!</p>
+                    <p>No answers yet!</p>
                 {% endif %}
 
 
@@ -89,7 +92,8 @@
             </div>
         </div>
     {% empty %}
-        <button type="button" class="btn" data-toggle="modal" data-target="#addQuestion">
+        <h3 class="display-4">There are no current questions...</h3>
+        <button type="button" class="btn btn-lg" data-toggle="modal" data-target="#addQuestion">
             Add a Question
         </button>
     {% endfor %}
@@ -108,16 +112,21 @@
             allowRefresh = true;
             refresh();
         });
-        $('#answerbutton').click(function(){
+        $('#answerbutton').click(function () {
             allowRefresh = !allowRefresh;
             $(this).prop('value', '&times;');
             refresh();
         });
         setTimeout(refresh, 1000);
+
         function refresh() {
             if (allowRefresh) {
                 $('body').load('{% url 'dash' %}')
             }
         }
+
+        $(".clickable-row").click(function () {
+            window.location = $(this).data("href");
+        });
     </script>
 {% endblock %}

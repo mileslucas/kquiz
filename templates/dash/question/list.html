@@ -2,13 +2,7 @@
 {% block title %}Questions{% endblock %}
 
 {% block content %}
-    <script>
-        jQuery(document).ready(function ($) {
-            $(".clickable-row").click(function () {
-                window.location = $(this).data("href");
-            });
-        });
-    </script>
+
     <h1>Questions</h1>
     <table class="table table-hover table-responsive">
         <thead class="thead-default">
@@ -35,4 +29,14 @@
         </tbody>
     </table>
 
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        $(document).ready(function ($) {
+            $(".clickable-row").click(function () {
+                window.location = $(this).data("href");
+            });
+        });
+    </script>
 {% endblock %}
