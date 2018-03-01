@@ -2,12 +2,13 @@
 {% block title %}Update {{ object }}{% endblock %}
 
 {% block content %}
+    {% load bootstrap4 %}
 
     <h1>{{ object }}</h1>
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Submit</button>
+        {% bootstrap_form form %}
+        <button type="submit">Save</button>
     </form>
     <p><a href="{% url 'remove_question' object.pk%}">Remove Question</a></p>
 

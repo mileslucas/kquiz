@@ -2,12 +2,13 @@
 {% block title %}Answer{% endblock %}
 
 {% block content %}
+    {% bootstrap4 %}
 
     <h1>Answer a question</h1>
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Submit</button>
+        {% bootstrap_form form %}
+        <button class="button" type="submit">Submit</button>
     </form>
 
 {% endblock %}

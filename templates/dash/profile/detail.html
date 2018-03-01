@@ -4,19 +4,77 @@
 {% block content %}
 
     <h1>{{ object.get_full_name }}</h1>
-    <h3>Questions Asked</h3>
-    {% for q in object.question_set.all %}
-        <p><a href="{% url 'detail_question' q.pk %}">{{ q }}</a></p>
-        <p>{{ q.text }}</p>
-    {% empty %}
+    <h4>
+        Questions Asked
+        {% if object.question_set.all %}
+            <span class="badge badge-light">{{ object.question_set.all|length }}</span>
+        {% endif %}
+    </h4>
+    {% if object.question_set.all %}
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Question</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for q in object.question_set.all %}
+                <tr class="clickable-row" data-href="{% url 'detail_question' q.pk %}">
+                    <td>{{ q.pk }}</td>
+                    <td>{{ q.text }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    {% else %}
+
         <p>No questions asked!</p>
-    {% endfor %}
+    {% endif %}
 
-    <h3>Answers Given</h3>
-    {% for a in object.answer_set.all %}
-        <p>{{ a }} - <a href="{% url 'detail_question' a.question.pk %}">{{ a.question }}</a></p>
-    {% empty %}
-     <p>No answers given!</p>
-    {% endfor %}
 
+    <h4>
+        Answers Given
+
+        {% if object.answer_set.all %}
+            <span class="badge badge-light">{{ object.answer_set.all|length }}</span>
+        {% endif %}
+    </h4>
+    {% if object.answer_set.all %}
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Question</th>
+                <th>Answer</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for a in object.answer_set.all %}
+                <tr class="clickable-row" data-href="{% url 'detail_question' a.question.pk %}">
+                    <td>{{ a.question.text }}</td>
+                    <td>{{ a.text }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <hr>
+        <p>No answers given!</p>
+    {% endif %}
+
+
+
+
+
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        $(document).ready(function ($) {
+            $(".clickable-row").click(function () {
+                window.location = $(this).data("href");
+            });
+        });
+    </script>
 {% endblock %}

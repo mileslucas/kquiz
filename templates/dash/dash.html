@@ -6,7 +6,7 @@
     {% load timedelta_filter %}
     {% load bootstrap4 %}
 
-
+    <!-- Add Question Modal -->
     <div class="modal fade" id="addQuestion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -41,7 +41,7 @@
                     {{ q }}
                     <small class="text-muted">{{ q.time_left|timedelta:"{minutes}:{seconds2}" }}</small>
                     {% if request.user == q.creator %}
-                        <small><a class="badge badge-light" href="{% url 'update_question' q.pk %}">Edit</a></small>
+                        <small><a class="badge badge-secondary" href="{% url 'update_question' q.pk %}">Edit</a></small>
                     {% endif %}
                 </h3>
             </div>
@@ -57,10 +57,18 @@
                         </thead>
                         <tbody>
                         {% for ans in q.answer_set.all %}
-                            <tr class="clickable-row" data-href="{% url 'update_answer' ans.pk %}">
-                                <td>{{ ans.text }}</td>
-                                <td>{{ ans.responder.first_name }}</td>
-                            </tr>
+                            {% if request.user == ans.responder %}
+                                <tr class="clickable-row" data-href="{% url 'update_answer' ans.pk %}">
+                                    <td>{{ ans.text }}</td>
+                                    <td>{{ ans.responder.first_name }}</td>
+                                </tr>
+                            {% else %}
+
+                                <tr>
+                                    <td>{{ ans.text }}</td>
+                                    <td>{{ ans.responder.first_name }}</td>
+                                </tr>
+                            {% endif %}
                         {% endfor %}
                         </tbody>
                     </table>
@@ -98,6 +106,22 @@
         </button>
     {% endfor %}
 
+    <div class="card" style="margin-top: 20px">
+        <div class="card-header">
+            <h3 class="card-title"> Previous Questions</h3>
+        </div>
+        <div class="card-body">
+            <div class="list-group list-group-flush">
+                {% for q in questions %}
+                    <a class="list-group-item list-group-item-action"
+                       href="{% url 'detail_question' q.pk %}">{{ q.text }}</a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="card-footer">
+            <a class="text-muted" href="{% url 'questions' %}">View All</a>
+        </div>
+    </div>
 
 {% endblock %}
 
@@ -114,7 +138,12 @@
         });
         $('#answerbutton').click(function () {
             allowRefresh = !allowRefresh;
-            $(this).prop('value', '&times;');
+            $('#answerbutton').html('<span aria-hidden="true">&times;</span>');
+            $('#answerbutton').removeClass('btn-primary');
+            refresh();
+        });
+        $('.navbar-toggler').click(function () {
+            allowRefresh = !allowRefresh;
             refresh();
         });
         setTimeout(refresh, 1000);
