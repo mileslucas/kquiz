@@ -21,6 +21,7 @@ webtest = "==2.0.29"
 whitenoise = "==3.3.1"
 wincertstore = "==0.2"
 django-timedeltatemplatefilter = "*"
+"django-bootstrap4" = "*"
 
 
 [dev-packages]

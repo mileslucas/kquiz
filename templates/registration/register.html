@@ -1,18 +1,14 @@
 {% extends "base.html" %}
 {% block title %}Register{% endblock %}
-
 {% block content %}
-
+{% load bootstrap4 %}
     <h1>Register</h1>
     <form method="POST">
         {% csrf_token %}
-        {% for field in form %}
-            <div>
-                {{ field.errors }}
-                {{ field.label_tag }} {{ field }}
-            </div>
-        {% endfor %}
-        <button type="submit">Register</button>
+        {% bootstrap_form form %}
+        {% buttons %}
+            <button type="submit" class="btn">Register</button>
+        {% endbuttons %}
     </form>
 
 {% endblock %}

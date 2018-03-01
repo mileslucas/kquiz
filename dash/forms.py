@@ -23,3 +23,9 @@ class CustomUserCreationForm(UserCreationForm):
             user.save()
         return user
 
+
+class QuestionForm(forms.ModelForm):
+
+    class Meta:
+        model = Question
+        fields = ['text', 'duration_value', 'duration_factor']

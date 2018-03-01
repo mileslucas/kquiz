@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.utils.decorators import method_decorator
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, QuestionForm
 from django.conf import settings
 from .models import Question, Answer, Profile
 from django.utils import timezone
@@ -27,7 +27,9 @@ class DashView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['cqs'] = [q for q in Question.objects.all() if not q.completed]
         context['questions'] = [q for q in Question.objects.order_by('-time_posted') if q.completed][:3]
+        context['add_question_form'] = QuestionForm
         return context
+
 
 @method_decorator(login_required, name='dispatch')
 class QuestionListView(ListView):

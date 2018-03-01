@@ -1,22 +1,18 @@
 {% extends "base.html" %}
 {% block title %}Login{% endblock %}
 {% block content %}
+    {% load bootstrap4 %}
 
 
     <h1>Login</h1>
 
     <form method="post">
         {% csrf_token %}
-        {% for field in form %}
-            <div>
-                {{ field.errors }}
-                {{ field.label_tag }} {{ field }}
-                {% if field.help_text %}
-                    <p class="help">{{ field.help_text|safe }}</p>
-                {% endif %}
-            </div>
-        {% endfor %}
-        <button type="submit">Login</button>
+        {% bootstrap_form_errors  form%}
+        {% bootstrap_form form %}
+        {% buttons %}
+            <button type="submit" class="btn">Login</button>
+        {% endbuttons %}
     </form>
     <a href="{% url 'register' %}">Register</a>
 
