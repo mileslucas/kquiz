@@ -4,10 +4,10 @@
 {% block content %}
     {% load timedelta_filter %}
 
-    <h1>
+    <h3>
         Question {{ object.pk }}
         {% if not object.completed %}<a class="badge" href="{% url 'update_question' object.pk %}">Edit</a>{% endif %}
-    </h1>
+    </h3>
     <blockquote class="blockquote">{{ object.text }}</blockquote>
     {% if object.completed %}
         <span class="badge badge-success">Completed</span>

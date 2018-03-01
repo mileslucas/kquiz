@@ -1,6 +1,23 @@
 {% extends "base.html" %}
 {% block title %}Home{% endblock %}
 
+{% block style %}
+    <style>
+        .collapse-form {
+            opacity: 0;
+            -webkit-transition: all .5s ease;
+            -moz-transition: all .5s ease;
+            transition: all .5s ease;
+            width: 0px;
+        }
+
+        .collapse-form.expanded {
+            border-radius: 0;
+            width: 300px;
+            opacity: 1;
+        }
+    </style>
+{% endblock %}
 
 {% block content %}
     {% load timedelta_filter %}
@@ -49,7 +66,7 @@
                 <blockquote class="blockquote">{{ q.text }}</blockquote>
                 {% if q.answer_set.all %}
                     <table class="table table-hover">
-                        <thead class="thead-light">
+                        <thead>
                         <tr>
                             <th>Answers</th>
                             <th></th>
@@ -78,30 +95,28 @@
                 {% endif %}
 
 
-                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#answer"
+                <button class="btn btn-primary float-right" type="button"
                         aria-expanded="false" aria-controls="answer" id="answerbutton">
                     Answer
                 </button>
 
-                <div class="collapse" style="margin-top: 10px" id="answer">
                     <form action="{% url 'add_answer' q.pk %}" method="post">
                         {% csrf_token %}
-                        {% bootstrap_form add_answer_form show_label=False %}
+                        {% bootstrap_form add_answer_form show_label=False field_class="collapse-form float-right w-75"%}
                         <input type="submit" style="display: none"/>
                     </form>
-                </div>
 
             </div>
             <div class="card-footer">
 
-                <button type="button" class="btn" data-toggle="modal" data-target="#addQuestion">
+                <button type="button" class="btn float-right" data-toggle="modal" data-target="#addQuestion">
                     Add a Question
                 </button>
             </div>
         </div>
     {% empty %}
         <h3 class="display-4">There are no current questions...</h3>
-        <button type="button" class="btn btn-lg" data-toggle="modal" data-target="#addQuestion">
+        <button type="button" class="btn btn-lg btn-block" data-toggle="modal" data-target="#addQuestion">
             Add a Question
         </button>
     {% endfor %}
@@ -119,7 +134,7 @@
             </div>
         </div>
         <div class="card-footer">
-            <a class="text-muted" href="{% url 'questions' %}">View All</a>
+            <a class="text-muted float-right" href="{% url 'questions' %}">View All</a>
         </div>
     </div>
 
@@ -138,6 +153,7 @@
         });
         $('#answerbutton').click(function () {
             allowRefresh = !allowRefresh;
+            $('.collapse-form').toggleClass('expanded');
             $('#answerbutton').html('<span aria-hidden="true">&times;</span>');
             $('#answerbutton').removeClass('btn-primary');
             refresh();

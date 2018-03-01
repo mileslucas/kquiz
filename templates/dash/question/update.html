@@ -22,7 +22,7 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button type="button" class="btn" data-dismiss="modal">No</button>
                     <button type="submit" form="removeform" class="btn btn-danger">Yes</button>
                 </div>
 
@@ -31,15 +31,15 @@
         </div>
     </div>
 
-    <h1>{{ object }}</h1>
+    <h3>Update {{ object }}</h3>
     <form method="post">
         {% csrf_token %}
         {% bootstrap_form form show_label=False %}
-        <button class="btn btn-primary" type="submit">Save Changes</button>
-        <button class="btn" href="{% url 'dash' %}">Cancel</button>
-        <button class="btn btn-danger float-right" type="button" data-toggle="modal" data-target="#remove"
+        <button class="btn btn-danger float-left" type="button" data-toggle="modal" data-target="#remove"
                 data-href="{% url 'remove_question' object.pk%}">Remove
         </button>
+        <button class="btn btn-primary float-right" type="submit">Save Changes</button>
+        <button class="btn float-right" href="{% url 'dash' %}">Cancel</button>
     </form>
 
 {% endblock %}
