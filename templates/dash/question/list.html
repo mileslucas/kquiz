@@ -2,20 +2,37 @@
 {% block title %}Questions{% endblock %}
 
 {% block content %}
-
+    <script>
+        jQuery(document).ready(function ($) {
+            $(".clickable-row").click(function () {
+                window.location = $(this).data("href");
+            });
+        });
+    </script>
     <h1>Questions</h1>
-    <table>
+    <table class="table table-hover table-responsive">
+        <thead class="thead-default">
+        <tr>
+            <th>#</th>
+            <th>Status</th>
+            <th>Time Posted</th>
+            <th>Question</th>
+            <th>Asked by</th>
+        </tr>
+        </thead>
+        <tbody>
         {% for q in object_list %}
-            <tr>
-                <td><a href="{% url 'detail_question' q.pk %}">{{ q.pk }}</a></td>
-                <td>{% if q.completed %} Completed {% endif %}</td>
-                <td>{{ q.time_posted }}</td>
+            <tr class="clickable-row" data-href="{% url 'detail_question' q.pk %}">
+                <td>{{ q.pk }}</td>
+                <td>{% if q.completed %} Completed {% else %} Open {% endif %}</td>
+                <td>{{ q.time_posted|date:"D f A" }}</td>
                 <td>{{ q.text }}</td>
-                <td>{{ q.dispatcher }}</td>
+                <td>{{ q.creator.get_full_name }}</td>
             </tr>
         {% empty %}
             <p>No questions yet.</p>
         {% endfor %}
+        </tbody>
     </table>
 
 {% endblock %}

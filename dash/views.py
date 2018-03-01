@@ -33,6 +33,8 @@ class DashView(TemplateView):
 class QuestionListView(ListView):
     template_name = 'dash/question/list.html'
     model = Question
+    ordering = '-time_posted'
+
 
 @method_decorator(login_required, name='dispatch')
 class QuestionCreateView(CreateView):
