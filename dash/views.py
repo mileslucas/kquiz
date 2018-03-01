@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.utils.decorators import method_decorator
-from .forms import CustomUserCreationForm, QuestionForm
+from .forms import CustomUserCreationForm, QuestionForm, AnswerForm
 from django.conf import settings
 from .models import Question, Answer, Profile
 from django.utils import timezone
@@ -28,6 +28,7 @@ class DashView(TemplateView):
         context['cqs'] = [q for q in Question.objects.all() if not q.completed]
         context['questions'] = [q for q in Question.objects.order_by('-time_posted') if q.completed][:3]
         context['add_question_form'] = QuestionForm
+        context['add_answer_form'] = AnswerForm
         return context
 
 
@@ -48,6 +49,7 @@ class QuestionCreateView(CreateView):
     def form_valid(self, form):
         q = form.save(commit=False)
         q.creator = self.request.user
+
         q.save()
         return super().form_valid(form)
 
