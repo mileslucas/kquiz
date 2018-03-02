@@ -13,7 +13,6 @@ services:
       - db
     env_file:
       - .env
-
   nginx:
      image: nginx:alpine
      restart: always
