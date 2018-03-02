@@ -30,6 +30,11 @@ class QuestionForm(forms.ModelForm):
         model = Question
         fields = ['text', 'duration_value', 'duration_factor']
 
+class AnswerForm(forms.ModelForm):
+    class Meta:
+        model = Answer
+        fields = ['text']
+
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
