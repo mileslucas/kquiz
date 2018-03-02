@@ -15,6 +15,8 @@ RUN pip install pipenv --upgrade
 RUN pipenv install --deploy --system
 
 # Collect our static media.
+# This is just to satisfy collectstatic and not used on runtime
+ARG SECRET_KEY=asdj2341dkm13kl1
 RUN python /app/manage.py collectstatic --noinput
 
 
