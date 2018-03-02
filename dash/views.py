@@ -4,9 +4,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.utils.decorators import method_decorator
-from .forms import CustomUserCreationForm, QuestionForm, AnswerForm
+from .forms import CustomUserCreationForm, QuestionForm, EventForm
 from django.conf import settings
-from .models import Question, Answer, Profile
+from .models import Question, Answer, Event
 from django.utils import timezone
 
 class RegisterView(FormView):
@@ -27,8 +27,9 @@ class DashView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['cqs'] = [q for q in Question.objects.all() if not q.completed]
         context['questions'] = [q for q in Question.objects.order_by('-time_posted') if q.completed][:3]
+        context['events'] = [e for e in Event.objects.order_by('-time') if not e.completed]
         context['add_question_form'] = QuestionForm
-        context['add_answer_form'] = AnswerForm
+        context['add_event_form'] = EventForm
         return context
 
 
@@ -49,7 +50,6 @@ class QuestionCreateView(CreateView):
     def form_valid(self, form):
         q = form.save(commit=False)
         q.creator = self.request.user
-
         q.save()
         return super().form_valid(form)
 
@@ -140,5 +140,54 @@ class AnswerDeleteView(DeleteView):
         """ Hook to ensure object is owned by request.user. """
         obj = super().get_object()
         if not obj.responder == self.request.user:
+            raise Http404
+        return obj
+
+@method_decorator(login_required, name='dispatch')
+class EventListView(ListView):
+    model = Event
+    template_name = 'dash/event/list.html'
+    ordering = '-time'
+
+@method_decorator(login_required, name='dispatch')
+class EventCreateView(CreateView):
+    template_name = 'dash/event/create.html'
+    model = Event
+    fields = ['title', 'location', 'time', 'description']
+    success_url = '/'
+
+    def form_valid(self, form):
+        e = form.save(commit=False)
+        e.creator = self.request.user
+        e.save()
+        return super().form_valid(form)
+
+@method_decorator(login_required, name='dispatch')
+class EventUpdateView(UpdateView):
+    template_name = 'dash/event/update.html'
+    model = Event
+    fields = ['title', 'location', 'time', 'completed', 'description']
+    success_url = '/'
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+
+    def get_object(self, queryset=None):
+        """ Hook to ensure object is owned by request.user. """
+        obj = super().get_object()
+        if not obj.creator == self.request.user:
+            raise Http404
+        return obj
+
+@method_decorator(login_required, name='dispatch')
+class EventDeleteView(DeleteView):
+    template_name = 'dash/event/delete.html'
+    model = Event
+    success_url = '/'
+    def get_object(self, queryset=None):
+        """ Hook to ensure object is owned by request.user. """
+        obj = super().get_object()
+        if not obj.creator == self.request.user:
             raise Http404
         return obj

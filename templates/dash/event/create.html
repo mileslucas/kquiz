@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Answer{% endblock %}
+
+{% block content %}
+    {% load bootstrap4 %}
+
+    <h1>Create an Event</h1>
+    <form method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <button class="button" type="submit">Submit</button>
+    </form>
+
+{% endblock %}

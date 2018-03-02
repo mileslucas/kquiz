@@ -42,6 +42,17 @@ class Answer(models.Model):
     def __str__(self):
         return self.text
 
+class Event(models.Model):
+    title = models.CharField(max_length=100, verbose_name='Event')
+    location = models.CharField(max_length=200, verbose_name='Location')
+    time = models.CharField(max_length=100, verbose_name='When')
+    description = models.TextField(default='', verbose_name='Description (Optional)')
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, editable=False)
+    respondents = models.ManyToManyField(User, related_name="events", default=None)
+    completed = models.BooleanField(default=False)
+
+
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, editable=False)
     # TODO think about cool statistics to store in here

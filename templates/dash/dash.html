@@ -50,6 +50,33 @@
         </div>
     </div>
 
+    <!-- Add Event Modal -->
+    <div class="modal fade" id="addEvent" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Schedule an Event</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="form" method="post" action="{% url 'add_event' %}" id="addevent">
+                        {% csrf_token %}
+                        {% bootstrap_form add_event_form show_label=False %}
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" form="addevent" class="btn btn-primary">Submit</button>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
 
     {% for q in cqs %}
         <div class="card" style="margin-bottom: 20px">
@@ -63,17 +90,21 @@
                 </h3>
                 <div class="progress" style="height: 4px">
                     {% if q.percent_left > 75 %}
-                    <div class="progress-bar w-100" role="progressbar" aria-valuenow="{{ q.percent_left }}" aria-valuemin="0"
-                         aria-valuemax="100"></div>
+                        <div class="progress-bar w-100" role="progressbar" aria-valuenow="{{ q.percent_left }}"
+                             aria-valuemin="0"
+                             aria-valuemax="100"></div>
                     {% elif q.percent_left > 50 %}
-                    <div class="progress-bar w-75" role="progressbar" aria-valuenow="{{ q.percent_left }}" aria-valuemin="0"
-                         aria-valuemax="100"></div>
+                        <div class="progress-bar w-75" role="progressbar" aria-valuenow="{{ q.percent_left }}"
+                             aria-valuemin="0"
+                             aria-valuemax="100"></div>
                     {% elif q.percent_left > 25 %}
-                    <div class="progress-bar w-50 bg-warning" role="progressbar" aria-valuenow="{{ q.percent_left }}" aria-valuemin="0"
-                         aria-valuemax="100"></div>
+                        <div class="progress-bar w-50 bg-warning" role="progressbar"
+                             aria-valuenow="{{ q.percent_left }}" aria-valuemin="0"
+                             aria-valuemax="100"></div>
                     {% else %}
-                    <div class="progress-bar w-25 bg-danger" role="progressbar" aria-valuenow="{{ q.percent_left }}" aria-valuemin="0"
-                         aria-valuemax="100"></div>
+                        <div class="progress-bar w-25 bg-danger" role="progressbar" aria-valuenow="{{ q.percent_left }}"
+                             aria-valuemin="0"
+                             aria-valuemax="100"></div>
                     {% endif %}
                 </div>
             </div>
@@ -115,7 +146,7 @@
                     Answer
                 </button>
 
-                <form action="{% url 'add_answer' q.pk %}" method="post">
+                <form class="form-inline" action="{% url 'add_answer' q.pk %}" method="post">
                     {% csrf_token %}
                     {% bootstrap_form add_answer_form show_label=False field_class="collapse-form float-right w-75" %}
                     <input type="submit" style="display: none"/>
@@ -131,14 +162,12 @@
         </div>
     {% empty %}
         <h3 class="display-4">There are no current questions...</h3>
-        <button type="button" class="btn btn-lg btn-block" data-toggle="modal" data-target="#addQuestion">
-            Add a Question
-        </button>
     {% endfor %}
 
     <div class="card" style="margin-top: 20px">
         <div class="card-header">
-            <h3 class="card-title"> Previous Questions</h3>
+            <h3 class="card-title"> Previous Questions
+            </h3>
         </div>
         <div class="card-body">
             <div class="list-group list-group-flush">
@@ -149,7 +178,44 @@
             </div>
         </div>
         <div class="card-footer">
-            <a class="text-muted float-right" href="{% url 'questions' %}">View All</a>
+            <a class="float-left" href="{% url 'questions' %}">View All</a>
+            <button type="button" class="btn float-right" data-toggle="modal" data-target="#addQuestion">
+                Add a Question
+            </button>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top: 20px">
+        <div class="card-header">
+            <h3 class="card-title">Events</h3>
+        </div>
+        <div class="card-body">
+            <div class="list-group list-group-flush">
+                {% for e in events %}
+                    {% if request.user == e.creator %}
+                        <div class="list-group-item list-group-item-action" >
+                            <a class="h5" href="{% url 'update_event' e.pk%}">{{ e.title }}</a>
+                            <p>When: {{ e.time }}</p>
+                            <p>Where: {{ e.location }}</p>
+                            <p>{{ e.description }}</p>
+                        </div>
+                    {% else %}
+                        <div class="list-group-item">
+                            <h6>{{ e.title }}</h6>  at {{ e.time }}
+                            <p>{{ e.location }}</p>
+                            <p>{{ e.description }}</p>
+                        </div>
+                    {% endif %}
+                {% empty %}
+                    No upcoming events!
+                {% endfor %}
+            </div>
+        </div>
+        <div class="card-footer">
+            <a class="float-left" href="{% url 'events' %}">View All</a>
+            <button type="button" class="btn float-right" data-toggle="modal" data-target="#addEvent">
+                Add an Event
+            </button>
         </div>
     </div>
 
@@ -163,6 +229,13 @@
             allowRefresh = false;
         });
         $('#addQuestion').on('hide.bs.modal', function () {
+            allowRefresh = true;
+            refresh();
+        });
+        $('#addEvent').on('show.bs.modal', function () {
+            allowRefresh = false;
+        });
+        $('#addEvent').on('hide.bs.modal', function () {
             allowRefresh = true;
             refresh();
         });

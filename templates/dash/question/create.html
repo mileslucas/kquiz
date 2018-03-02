@@ -2,11 +2,12 @@
 {% block title %}{{ question }}{% endblock %}
 
 {% block content %}
+    {% load bootstrap4 %}
 
     <h1>Add Question</h1>
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        {% bootstrap_form form show_label=False %}
         <button type="submit">Submit</button>
     </form>
 

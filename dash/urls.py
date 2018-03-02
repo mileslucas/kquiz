@@ -18,4 +18,8 @@ urlpatterns = [
     path('answer/add/<int:pk>', AnswerCreateView.as_view(), name='add_answer'),
     path('answer/update/<int:pk>', AnswerUpdateView.as_view(), name='update_answer'),
     path('answer/remove/<int:pk>', AnswerDeleteView.as_view(), name='remove_answer'),
+    path('events', EventListView.as_view(), name='events'),
+    path('event/add', EventCreateView.as_view(), name='add_event'),
+    path('event/update/<int:pk>', EventUpdateView.as_view(), name='update_event'),
+    path('event/remove/<int:pk>', EventDeleteView.as_view(), name='remove_event'),
 ]
