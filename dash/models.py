@@ -26,7 +26,10 @@ class Question(models.Model):
     @property
     def time_left(self):
         return self.time_done - timezone.now()
-
+    @property
+    def percent_left(self):
+        p = (self.time_done - timezone.now()).total_seconds() / (self.time_done - self.time_posted).total_seconds()
+        return int(p * 100)
     def __str__(self):
         return f'Question {self.pk}'
 

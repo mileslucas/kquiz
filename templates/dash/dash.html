@@ -61,6 +61,21 @@
                         <small><a class="badge badge-secondary" href="{% url 'update_question' q.pk %}">Edit</a></small>
                     {% endif %}
                 </h3>
+                <div class="progress" style="height: 4px">
+                    {% if q.percent_left > 75 %}
+                    <div class="progress-bar w-100" role="progressbar" aria-valuenow="{{ q.percent_left }}" aria-valuemin="0"
+                         aria-valuemax="100"></div>
+                    {% elif q.percent_left > 50 %}
+                    <div class="progress-bar w-75" role="progressbar" aria-valuenow="{{ q.percent_left }}" aria-valuemin="0"
+                         aria-valuemax="100"></div>
+                    {% elif q.percent_left > 25 %}
+                    <div class="progress-bar w-50 bg-warning" role="progressbar" aria-valuenow="{{ q.percent_left }}" aria-valuemin="0"
+                         aria-valuemax="100"></div>
+                    {% else %}
+                    <div class="progress-bar w-25 bg-danger" role="progressbar" aria-valuenow="{{ q.percent_left }}" aria-valuemin="0"
+                         aria-valuemax="100"></div>
+                    {% endif %}
+                </div>
             </div>
             <div class="card-body">
                 <blockquote class="blockquote">{{ q.text }}</blockquote>
@@ -100,11 +115,11 @@
                     Answer
                 </button>
 
-                    <form action="{% url 'add_answer' q.pk %}" method="post">
-                        {% csrf_token %}
-                        {% bootstrap_form add_answer_form show_label=False field_class="collapse-form float-right w-75"%}
-                        <input type="submit" style="display: none"/>
-                    </form>
+                <form action="{% url 'add_answer' q.pk %}" method="post">
+                    {% csrf_token %}
+                    {% bootstrap_form add_answer_form show_label=False field_class="collapse-form float-right w-75" %}
+                    <input type="submit" style="display: none"/>
+                </form>
 
             </div>
             <div class="card-footer">
