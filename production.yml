@@ -19,9 +19,11 @@ services:
      restart: always
      ports:
        - "80:80"
+       - "443:443"
      volumes:
-       - /static:/www/static
+       - ./staticfiles:/www/static
        - ./nginx:/etc/nginx/conf.d
+       - /home/miles/cerfs:/cerfs
        - .:/app
      links:
        - web

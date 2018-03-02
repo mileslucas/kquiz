@@ -6,7 +6,7 @@
 
     <h3>
         Question {{ object.pk }}
-        {% if not object.completed %}<a class="badge" href="{% url 'update_question' object.pk %}">Edit</a>{% endif %}
+        {% if not object.completed and request.user == object.creator %}<a class="badge" href="{% url 'update_question' object.pk %}">Edit</a>{% endif %}
     </h3>
     <blockquote class="blockquote">{{ object.text }}</blockquote>
     {% if object.completed %}
