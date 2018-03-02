@@ -14,5 +14,8 @@ RUN pip install pipenv --upgrade
 # -- Install dependencies:
 RUN pipenv install --deploy --system
 
+# Collect our static media.
+RUN python /app/manage.py collectstatic --noinput
+
 
 CMD ["/bin/bash"]

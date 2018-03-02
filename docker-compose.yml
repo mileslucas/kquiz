@@ -3,7 +3,7 @@ version: '3'
 services:
   web:
     build: .
-    command: /usr/local/wait-for-it.sh db:5432 --strict -- python3 manage.py runserver 0.0.0.0:8000
+    command: /usr/local/wait-for-it.sh db:5432 --strict -- python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/app
     ports:
