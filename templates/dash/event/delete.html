@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Delete {{ object }}{% endblock %}
+
+{% block content %}
+
+    <p>Are you sure you want to delete answer {{ object.pk }} in response to <a href="{% url 'detail_question' object.question.pk %}">{{ object.question }}</a>?</p>
+    <p>{{ object.text }}</p>
+
+    <form action="{% url 'remove_answer' object.pk %}" method="post">{% csrf_token %}<button type="submit">Yes</button></form>
+    <form action="{% url 'update_answer' object.pk %}">{% csrf_token %}<button type="submit">No</button></form>
+
+
+{% endblock %}

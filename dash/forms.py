@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import ModelForm
 from django import forms
-from .models import Question, Answer
+from .models import Question, Answer, Event
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -30,7 +30,9 @@ class QuestionForm(forms.ModelForm):
         model = Question
         fields = ['text', 'duration_value', 'duration_factor']
 
-class AnswerForm(forms.ModelForm):
+class EventForm(forms.ModelForm):
     class Meta:
-        model = Answer
-        fields = ['text']
+        model = Event
+        fields = ['title', 'location', 'time', 'description']
+
+
