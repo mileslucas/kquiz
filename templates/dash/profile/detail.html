@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{{ object }}{% endblock %}
+{% block title %}{{ object.get_full_name }}{% endblock %}
 
 {% block content %}
 
@@ -29,7 +29,7 @@
         </table>
 
     {% else %}
-
+	<hr>
         <p>No questions asked!</p>
     {% endif %}
 
