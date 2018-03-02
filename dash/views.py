@@ -173,12 +173,6 @@ class EventUpdateView(UpdateView):
         form.save()
         return super().form_valid(form)
 
-    def get_object(self, queryset=None):
-        """ Hook to ensure object is owned by request.user. """
-        obj = super().get_object()
-        if not obj.creator == self.request.user:
-            raise Http404
-        return obj
 
 @method_decorator(login_required, name='dispatch')
 class EventDeleteView(DeleteView):

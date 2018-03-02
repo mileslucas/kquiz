@@ -190,22 +190,17 @@
             <h3 class="card-title">Events</h3>
         </div>
         <div class="card-body">
-            <div class="list-group list-group-flush">
+            <div class="list-group">
                 {% for e in events %}
-                    {% if request.user == e.creator %}
-                        <div class="list-group-item list-group-item-action" >
-                            <a class="h5" href="{% url 'update_event' e.pk%}">{{ e.title }}</a>
-                            <p>When: {{ e.time }}</p>
-                            <p>Where: {{ e.location }}</p>
-                            <p>{{ e.description }}</p>
+                    <a href="{% url 'update_event' e.pk %}"
+                       class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5>{{ e.title }}</h5>
+                            <p>{{ e.time }}</p>
                         </div>
-                    {% else %}
-                        <div class="list-group-item">
-                            <h6>{{ e.title }}</h6>  at {{ e.time }}
-                            <p>{{ e.location }}</p>
-                            <p>{{ e.description }}</p>
-                        </div>
-                    {% endif %}
+                        <p class="text-muted">{{ e.location }}</p>
+                        <p class="mb-1">{{ e.description }}</p>
+                    </a>
                 {% empty %}
                     No upcoming events!
                 {% endfor %}

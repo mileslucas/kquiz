@@ -30,17 +30,29 @@
             </div>
         </div>
     </div>
-
-    <h3>Update an Event</h3>
-    <form method="post">
-        {% csrf_token %}
-        {% bootstrap_form form %}
-        <button class="btn btn-primary float-right" type="submit">Save Changes</button>
-        <button class="btn float-right" href="{% url 'dash' %}">Cancel</button>
-        <button class="btn btn-danger float-lefht" type="button" data-toggle="modal" data-target="#remove"
-                data-href="{% url 'remove_event' object.pk %}">Remove
-        </button>
-    </form>
+    {% if request.user == object.creator %}
+        <h3>Update an Event</h3>
+        <form method="post">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <button class="btn btn-primary float-right" type="submit">Save Changes</button>
+            <button class="btn float-right" href="{% url 'dash' %}">Cancel</button>
+            <button class="btn btn-danger float-lefht" type="button" data-toggle="modal" data-target="#remove"
+                    data-href="{% url 'remove_event' object.pk %}">Remove
+            </button>
+        </form>
+    {% else %}
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">{{ object.title }}</h2>
+                <hr>
+                <p>Time: {{ object.time }}</p>
+                <p>Location: {{ object.location }}</p>
+                <blockquote>{{ object.description }}</blockquote>
+                Created by <a href="{% url 'profile' object.creator.username %}">{{ object.creator.get_full_name }}</a>
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}
 
 {% block javascript %}
