@@ -146,19 +146,14 @@
                     Answer
                 </button>
 
-                <form class="form-inline" action="{% url 'add_answer' q.pk %}" method="post">
+                <form class="form" action="{% url 'add_answer' q.pk %}" method="post">
                     {% csrf_token %}
                     {% bootstrap_form add_answer_form show_label=False field_class="collapse-form float-right w-75" %}
                     <input type="submit" style="display: none"/>
                 </form>
 
             </div>
-            <div class="card-footer">
 
-                <button type="button" class="btn float-right" data-toggle="modal" data-target="#addQuestion">
-                    Add a Question
-                </button>
-            </div>
         </div>
     {% empty %}
         <h3 class="display-4">There are no current questions...</h3>
@@ -180,7 +175,7 @@
             </div>
         </div>
         <div class="card-footer">
-            <a class="float-left" href="{% url 'questions' %}">View All</a>
+            <a class="btn btn-light float-left" href="{% url 'questions' %}">View All</a>
             <button type="button" class="btn float-right" data-toggle="modal" data-target="#addQuestion">
                 Add a Question
             </button>
@@ -209,7 +204,7 @@
             </div>
         </div>
         <div class="card-footer">
-            <a class="float-left" href="{% url 'events' %}">View All</a>
+            <a class="btn btn-light float-left" href="{% url 'events' %}">View All</a>
             <button type="button" class="btn float-right" data-toggle="modal" data-target="#addEvent">
                 Add an Event
             </button>

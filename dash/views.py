@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.utils.decorators import method_decorator
-from .forms import CustomUserCreationForm, QuestionForm, EventForm
+from .forms import CustomUserCreationForm, QuestionForm, EventForm, AnswerForm
 from django.conf import settings
 from .models import Question, Answer, Event
 from django.utils import timezone
@@ -27,8 +27,9 @@ class DashView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['cqs'] = [q for q in Question.objects.all() if not q.completed]
         context['questions'] = [q for q in Question.objects.order_by('-time_posted') if q.completed][:3]
-        context['events'] = [e for e in Event.objects.order_by('-time') if not e.completed]
+        context['events'] = [e for e in Event.objects.order_by('-id') if not e.completed][:3]
         context['add_question_form'] = QuestionForm
+        context['add_answer_form'] = AnswerForm
         context['add_event_form'] = EventForm
         return context
 
