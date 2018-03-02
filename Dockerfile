@@ -1,23 +1,19 @@
 FROM python:3
 
 ENV PYTHONUNBUFFERED 1
-RUN curl -so /usr/local/wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh && chmod 777 /usr/local/wait-for-it.sh
-
-RUN mkdir /app
-ADD . /app/
-WORKDIR /app
 RUN pip install pipenv --upgrade
 ## -- Adding Pipfiles
-#COPY Pipfile Pipfile
-#COPY Pipfile.lock Pipfile.lock
+COPY Pipfile Pipfile
+COPY Pipfile.lock Pipfile.lock
 
 # -- Install dependencies:
 RUN pipenv install --deploy --system
 
-# Collect our static media.
-# This is just to satisfy collectstatic and not used on runtime
-ARG SECRET_KEY=asdj2341dkm13kl1
-RUN python /app/manage.py collectstatic --noinput
+COPY docker-entrypoint.sh /usr/local/docker-entrypoint.sh
+RUN chmod +x /usr/local/docker-entrypoint.sh
+RUN mkdir /app
+ADD . /app
+WORKDIR /app
 
-
+ENTRYPOINT ["/usr/local/docker-entrypoint.sh"]
 CMD ["/bin/bash"]
