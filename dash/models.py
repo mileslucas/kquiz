@@ -9,11 +9,14 @@ from django.utils import timezone
 class Question(models.Model):
     text = models.TextField(verbose_name='Question')
     time_posted = models.DateTimeField(auto_now_add=True)
-    duration_value = models.IntegerField(verbose_name='Duration')
+    points = models.IntegerField(verbose_name='Points')
+    correct = models.BooleanField(default=False)
+    duration_value = models.IntegerField(default=6, verbose_name='Duration')
     UNITS = (
         (60, 'min'),
         (1, 'sec')
     )
+    correct_answer = models.CharField(max_length=100, default='')
     duration_factor = models.IntegerField(choices=UNITS, default=60)
     creator = models.ForeignKey(User, on_delete=models.CASCADE, editable=False)
     @property
@@ -30,6 +33,11 @@ class Question(models.Model):
     def percent_left(self):
         p = (self.time_done - timezone.now()).total_seconds() / (self.time_done - self.time_posted).total_seconds()
         return int(p * 100)
+
+    @property
+    def effective_points(self):
+        return self.points if self.correct else 0
+
     def __str__(self):
         return f'Question {self.pk}'
 

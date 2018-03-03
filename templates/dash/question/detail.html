@@ -6,15 +6,18 @@
 
     <h3>
         Question {{ object.pk }}
-        {% if not object.completed and request.user == object.creator %}<a class="badge" href="{% url 'update_question' object.pk %}">Edit</a>{% endif %}
+        <a class="badge" href="{% url 'update_question' object.pk %}">Edit</a>
     </h3>
     <blockquote class="blockquote">{{ object.text }}</blockquote>
-    {% if object.completed %}
+    {% if object.completed and object.correct %}
         <span class="badge badge-success">Completed</span>
+        <p>Time done: {{ object.time_done|date:"l f A" }}</p>
+    {% elif objects.completed %}
+        <span class="badge badge-danger">Completed</span>
         <p>Time done: {{ object.time_done|date:"l f A" }}</p>
     {% else %}
         <span class="badge badge-primary">Open</span>
-        <p>Time left: {{ object.time_left|timedelta:"{minutes}:{seconds2}" }}</p>
+        <p>Time left: {{ object.time_left|timedelta:"{hours}:{minutes}:{seconds2}" }}</p>
     {% endif %}
     {% if object.answer_set.all %}
         <table class="table">

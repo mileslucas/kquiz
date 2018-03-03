@@ -31,6 +31,7 @@ class DashView(TemplateView):
         context['add_question_form'] = QuestionForm
         context['add_answer_form'] = AnswerForm
         context['add_event_form'] = EventForm
+        context['total_points'] = sum([q.effective_points for q in Question.objects.all()])
         return context
 
 
@@ -45,7 +46,7 @@ class QuestionListView(ListView):
 class QuestionCreateView(CreateView):
     template_name = 'dash/question/create.html'
     model = Question
-    fields = ['text', 'duration_value', 'duration_factor']
+    fields = ['text', 'points', 'duration_value', 'duration_factor']
     success_url = '/'
 
     def form_valid(self, form):
@@ -58,26 +59,18 @@ class QuestionCreateView(CreateView):
 class QuestionDetailView(DetailView):
     template_name = 'dash/question/detail.html'
     model = Question
-    fields = ['text', 'duration_value', 'duration_factor']
+    fields = ['text', 'points', 'correct', 'correct_answer', 'duration_value', 'duration_factor']
 
 @method_decorator(login_required, name='dispatch')
 class QuestionUpdateView(UpdateView):
     template_name = 'dash/question/update.html'
     model = Question
-    fields = ['text', 'duration_value', 'duration_factor']
+    fields = ['text', 'points', 'correct', 'correct_answer', 'duration_value', 'duration_factor']
     success_url = '/'
 
     def form_valid(self, form):
         form.save()
         return super().form_valid(form)
-
-    def get_object(self, queryset=None):
-        """ Hook to ensure object is owned by request.user. """
-        obj = super().get_object()
-        if not obj.creator == self.request.user:
-            raise Http404
-        return obj
-
 
 @method_decorator(login_required, name='dispatch')
 class QuestionDeleteView(DeleteView):

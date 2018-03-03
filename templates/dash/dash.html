@@ -82,11 +82,9 @@
         <div class="card" style="margin-bottom: 20px">
             <div class="card-header question">
                 <h3 class="card-title">
+                    <small><a class="badge badge-secondary float-right" href="{% url 'update_question' q.pk %}">Edit</a></small>
                     {{ q }}
                     <small class="text-muted">{{ q.time_left|timedelta:"{minutes}:{seconds2}" }}</small>
-                    {% if request.user == q.creator %}
-                        <small><a class="badge badge-secondary" href="{% url 'update_question' q.pk %}">Edit</a></small>
-                    {% endif %}
                 </h3>
                 <div class="progress" style="height: 4px">
                     {% if q.percent_left > 75 %}
@@ -109,12 +107,13 @@
                 </div>
             </div>
             <div class="card-body">
+		<p><em>{{ q.points }} points</em></p>
                 <blockquote class="blockquote">{{ q.text }}</blockquote>
                 {% if q.answer_set.all %}
                     <table class="table table-hover">
                         <thead>
                         <tr>
-                            <th>Answers</th>
+                            <th>Discussion</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -137,13 +136,13 @@
                     </table>
                 {% else %}
                     <hr>
-                    <p>No answers yet!</p>
+                    <p>No discussion yet!</p>
                 {% endif %}
 
 
                 <button class="btn btn-primary float-right" type="button"
                         aria-expanded="false" aria-controls="answer" id="answerbutton">
-                    Answer
+                    Comment
                 </button>
 
                 <form class="form" action="{% url 'add_answer' q.pk %}" method="post">
@@ -162,13 +161,14 @@
     <div class="card" style="margin-top: 20px">
         <div class="card-header">
             <h3 class="card-title"> Previous Questions
+		<small>Total Points: {{ total_points }}</small>
             </h3>
         </div>
         <div class="card-body">
             <div class="list-group list-group-flush">
                 {% for q in questions %}
                     <a class="list-group-item list-group-item-action"
-                       href="{% url 'detail_question' q.pk %}">{{ q.text }}</a>
+                       href="{% url 'update_question' q.pk %}">{{ q.text }}</a>
 		{% empty %}
 			No previous questions!
                 {% endfor %}
