@@ -28,7 +28,7 @@ class QuestionForm(forms.ModelForm):
 
     class Meta:
         model = Question
-        fields = ['text', 'points', 'duration_value', 'duration_factor']
+        fields = ['number', 'text', 'points', 'duration_value']
 
 class AnswerForm(forms.ModelForm):
     class Meta:
