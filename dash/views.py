@@ -46,7 +46,7 @@ class QuestionListView(ListView):
 class QuestionCreateView(CreateView):
     template_name = 'dash/question/create.html'
     model = Question
-    fields = ['text', 'points', 'duration_value', 'duration_factor']
+    fields = ['number', 'text', 'points', 'duration_value', 'duration_factor']
     success_url = '/'
 
     def form_valid(self, form):
@@ -59,13 +59,13 @@ class QuestionCreateView(CreateView):
 class QuestionDetailView(DetailView):
     template_name = 'dash/question/detail.html'
     model = Question
-    fields = ['text', 'points', 'correct', 'correct_answer', 'duration_value', 'duration_factor']
+    fields = ['number', 'text', 'points', 'correct', 'our_answer', 'correct_answer', 'duration_value', 'duration_factor']
 
 @method_decorator(login_required, name='dispatch')
 class QuestionUpdateView(UpdateView):
     template_name = 'dash/question/update.html'
     model = Question
-    fields = ['text', 'points', 'correct', 'correct_answer', 'duration_value', 'duration_factor']
+    fields = ['number', 'text', 'points', 'correct', 'our_answer', 'correct_answer', 'duration_value', 'duration_factor']
     success_url = '/'
 
     def form_valid(self, form):

@@ -7,9 +7,11 @@ from django.utils import timezone
 
 # Create your models here.
 class Question(models.Model):
+    number = models.IntegerField(verbose_name='Question Number')
     text = models.TextField(verbose_name='Question')
     time_posted = models.DateTimeField(auto_now_add=True)
     points = models.IntegerField(verbose_name='Points')
+    our_answer = models.CharField(max_length=100, default='')
     correct = models.BooleanField(default=False)
     duration_value = models.IntegerField(default=6, verbose_name='Duration')
     UNITS = (
@@ -39,7 +41,7 @@ class Question(models.Model):
         return self.points if self.correct else 0
 
     def __str__(self):
-        return f'Question {self.pk}'
+        return f'Question {self.number}'
 
 class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, editable=False)

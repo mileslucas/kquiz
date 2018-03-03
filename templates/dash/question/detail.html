@@ -19,6 +19,9 @@
         <span class="badge badge-primary">Open</span>
         <p>Time left: {{ object.time_left|timedelta:"{hours}:{minutes}:{seconds2}" }}</p>
     {% endif %}
+	<p> Our answer: {{ object.our_answer }} </p>
+        <p> Correct Answer: {{object.correct_answer }} </p>
+        <p> Points: {{ object.points }} </p>
     {% if object.answer_set.all %}
         <table class="table">
             <thead>
